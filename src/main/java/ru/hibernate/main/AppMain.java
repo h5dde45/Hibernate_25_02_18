@@ -2,63 +2,41 @@ package ru.hibernate.main;
 
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import ru.hibernate.dao.ContactDaoImpl;
+import ru.hibernate.entity.ContactEntity;
+import ru.hibernate.entity.ContactTelDetailEntity;
 import ru.hibernate.utils.HibernateSessionFactory;
+
+import java.util.List;
 
 public class AppMain {
     public static void main(String[] args) {
 
         Session session = HibernateSessionFactory.getSessionFactory().openSession();
+        ContactDaoImpl contactDAO = new ContactDaoImpl();
+        contactDAO.setSession(session);
 
-        Transaction transaction = session.beginTransaction();
+        Transaction tx = session.beginTransaction();
 
-//        ContactEntity contactEntity = new ContactEntity();
-//
-//        contactEntity.setBirthDate(new java.util.Date());
-//        contactEntity.setFirstName("Nick");
-//        contactEntity.setLastName("VN");
-//
-//        session.save(contactEntity);
-//        session.getTransaction().commit();
+        List<ContactEntity> contacts = contactDAO.findAll();
+        for (ContactEntity contact : contacts) {
+            System.out.println(contact);
+        }
 
-//        Query query = session.createQuery("from ContactEntity where firstName = :paramName");
-//        query.setParameter("paramName", "Nick");
-//        List list = query.list();
-//        System.out.println(list);
+        listContactsWithDetail(contacts);
 
-//        Query query = session.createQuery("update ContactEntity " +
-//                "set firstName = :nameParam, lastName = :lastNameParam" +
-//                ", birthDate = :birthDateParam"+
-//                " where firstName = :nameCode");
-//
-//        query.setParameter("nameCode", "Nick");
-//        query.setParameter("nameParam", "NickChangedName1");
-//        query.setParameter("lastNameParam", "LastNameChanged1" );
-//        query.setParameter("birthDateParam", new Date());
-//
-//        int result = query.executeUpdate();
-//        transaction.commit();
-//        System.out.println(result);
-//        Calendar startDate=new GregorianCalendar(1999,2,22);
-//        Calendar endDate=new GregorianCalendar(2017,2,22);
-//        System.out.println(getNameCriteria(startDate,endDate,session));
-
+        tx.commit();
         HibernateSessionFactory.shutdown();
-
-
     }
-//    private static List getNameCriteria(Calendar startDate, Calendar endDate, Session session) {
-//        Criteria criteria = session.createCriteria(ContactEntity.class);
-//
-//        if(startDate != null) {
-//            criteria.add(Restrictions.ge("birthDate", startDate.getTime()));
-//            /*@DEPRECATED
-//            criteria.add(Expression.ge("birth_date", startDate.getTime()));
-//            */
-//        }
-//        if(endDate != null) {
-//            criteria.add(Restrictions.le("birthDate", endDate.getTime()));
-//        }
-//        criteria.addOrder(Order.desc("birthDate"));
-//        return criteria.list();
-//    }
+    private static void listContactsWithDetail(List<ContactEntity> contacts) {
+        System.out.println("Contact with detail info");
+        for (ContactEntity contact : contacts) {
+            System.out.println(contact);
+            if (contact.getContactTelDetails() != null) {
+                for (ContactTelDetailEntity detailedContact : contact.getContactTelDetails()) {
+                    System.out.println(detailedContact);
+                }
+            }
+        }
+    }
 }

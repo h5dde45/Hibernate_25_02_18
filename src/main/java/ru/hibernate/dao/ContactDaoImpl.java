@@ -1,6 +1,7 @@
 package ru.hibernate.dao;
 
 import org.hibernate.Session;
+import ru.hibernate.entity.ContactEntity;
 
 import java.util.List;
 

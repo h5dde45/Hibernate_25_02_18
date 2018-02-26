@@ -1,16 +1,15 @@
-package ru.hibernate.dao;
+package ru.hibernate.entity;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Id;
+import java.io.Serializable;
 
-@Entity
-@Table(name = "contact_hobby_detail", schema = "testschema")
-@IdClass(ContactHobbyDetailEntityPK.class)
-public class ContactHobbyDetailEntity {
+public class ContactHobbyDetailEntityPK implements Serializable {
     private int contactId;
     private String hobbyId;
 
-    @Id
     @Column(name = "contact_id", nullable = false)
+    @Id
     public int getContactId() {
         return contactId;
     }
@@ -19,8 +18,8 @@ public class ContactHobbyDetailEntity {
         this.contactId = contactId;
     }
 
+    @Column(name = "hobby_id", nullable = false,insertable = false,updatable = false, length = 20)
     @Id
-    @Column(name = "hobby_id", nullable = false, length = 20)
     public String getHobbyId() {
         return hobbyId;
     }
@@ -34,7 +33,7 @@ public class ContactHobbyDetailEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        ContactHobbyDetailEntity that = (ContactHobbyDetailEntity) o;
+        ContactHobbyDetailEntityPK that = (ContactHobbyDetailEntityPK) o;
 
         if (contactId != that.contactId) return false;
         if (hobbyId != null ? !hobbyId.equals(that.hobbyId) : that.hobbyId != null) return false;

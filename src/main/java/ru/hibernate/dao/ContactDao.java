@@ -1,5 +1,7 @@
 package ru.hibernate.dao;
 
+import ru.hibernate.entity.ContactEntity;
+
 import java.util.List;
 
 public interface ContactDao {

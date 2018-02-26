@@ -1,4 +1,4 @@
-package ru.hibernate.dao;
+package ru.hibernate.entity;
 
 import javax.persistence.*;
 
