@@ -11,6 +11,7 @@ public class ContactTelDetailEntity {
     private int version;
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     public int getId() {
         return id;
@@ -40,7 +41,7 @@ public class ContactTelDetailEntity {
         this.telNumber = telNumber;
     }
 
-    @Basic
+    @Version
     @Column(name = "version", nullable = false)
     public int getVersion() {
         return version;
@@ -48,6 +49,18 @@ public class ContactTelDetailEntity {
 
     public void setVersion(int version) {
         this.version = version;
+    }
+
+    private ContactEntity contact;
+
+    @ManyToOne
+    @JoinColumn(name = "contact_id")
+    public ContactEntity getContact() {
+        return this.contact;
+    }
+
+    public void setContact(ContactEntity contact) {
+        this.contact = contact;
     }
 
     @Override
@@ -72,5 +85,16 @@ public class ContactTelDetailEntity {
         result = 31 * result + (telNumber != null ? telNumber.hashCode() : 0);
         result = 31 * result + version;
         return result;
+    }
+    @Override
+    public String toString() {
+        return "ContactTelDetailEntity{" +
+                "id=" + id +
+                ", contact id: " + getContact().getId() +
+                ", telType='" + telType + '\'' +
+                ", telNumber='" + telNumber + '\'' +
+                ", version=" + version +
+                ", contact=" + contact +
+                '}';
     }
 }

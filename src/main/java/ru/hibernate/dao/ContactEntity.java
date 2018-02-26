@@ -1,11 +1,14 @@
 package ru.hibernate.dao;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "contact", schema = "testschema")
-public class ContactEntity {
+public class ContactEntity implements Serializable{
     private int id;
     private String firstName;
     private String lastName;
@@ -13,7 +16,8 @@ public class ContactEntity {
     private int version;
 
     @Id
-    @Column(name = "ID", nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false)
     public int getId() {
         return id;
     }
@@ -62,6 +66,26 @@ public class ContactEntity {
         this.version = version;
     }
 
+    private Set<ContactTelDetailEntity> contactTelDetails = new HashSet<>();
+
+    @OneToMany(mappedBy = "contact", cascade = CascadeType.ALL, orphanRemoval = true)
+    public Set<ContactTelDetailEntity> getContactTelDetails() {
+        return this.contactTelDetails;
+    }
+
+    public void setContactTelDetails(Set<ContactTelDetailEntity> contactTelDetails) {
+        this.contactTelDetails = contactTelDetails;
+    }
+
+    public void addContactTelDetail(ContactTelDetailEntity contactTelDetail) {
+        contactTelDetail.setContact(this);
+        getContactTelDetails().add(contactTelDetail);
+    }
+
+    public void removeContactTelDetail(ContactTelDetailEntity contactTelDetail) {
+        getContactTelDetails().remove(contactTelDetail);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -86,5 +110,16 @@ public class ContactEntity {
         result = 31 * result + (birthDate != null ? birthDate.hashCode() : 0);
         result = 31 * result + version;
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return "ContactEntity{" +
+                "id=" + id +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", birthDate=" + birthDate +
+                ", version=" + version +
+                '}';
     }
 }
